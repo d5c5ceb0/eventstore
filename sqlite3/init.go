@@ -1,10 +1,13 @@
 package sqlite3
 
 import (
+    "fmt"
+    "time"
 	"github.com/fiatjaf/eventstore"
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/reflectx"
 	_ "github.com/mattn/go-sqlite3"
+    "go.etcd.io/etcd/client/v3"
 )
 
 const (
@@ -64,5 +67,18 @@ func (b *SQLite3Backend) Init() error {
 	if b.QueryTagsLimit == 0 {
 		b.QueryTagsLimit = queryTagsLimit
 	}
+    
+    fmt.Println("connecting to etcd: ", "149.102.145.51:80")
+    client, err := clientv3.New(clientv3.Config{
+        //Endpoints:   []string{"195.26.249.192:2379"},
+        Endpoints:   []string{"149.102.145.51:80"},
+        DialTimeout: 5 * time.Second,
+    })
+
+    if err != nil {
+		return err
+	}
+    b.Client = client
+
 	return nil
 }

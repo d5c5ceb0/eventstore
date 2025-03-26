@@ -4,11 +4,13 @@ import (
 	"sync"
 
 	"github.com/jmoiron/sqlx"
+    "go.etcd.io/etcd/client/v3"
 )
 
 type SQLite3Backend struct {
 	sync.Mutex
 	*sqlx.DB
+    *clientv3.Client
 	DatabaseURL       string
 	QueryLimit        int
 	QueryIDsLimit     int
@@ -19,4 +21,5 @@ type SQLite3Backend struct {
 
 func (b *SQLite3Backend) Close() {
 	b.DB.Close()
+    b.Client.Close()
 }
